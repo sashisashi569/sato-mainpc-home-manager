@@ -1,4 +1,4 @@
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, aagl, system, ... }:
 
 {
   imports = [
@@ -19,6 +19,7 @@
     gh            # GitHub CLI
     claude-code   # Claude Code CLI
     cider-2
+    aagl.packages.${system}.honkers-railway-launcher  # 崩壊: スターレイル ランチャー
   ];
 
   # ========== プログラム設定 ==========
@@ -26,8 +27,31 @@
 
   programs.git = {
     enable = true;
-    # userName  = "your name";
-    # userEmail = "your@email.com";
+    # userName / userEmail は homectl から動的取得 (home.activation.gitUserFromHomectl 参照)
+    settings = {
+      include.path = "${config.home.homeDirectory}/.config/git/user-from-homectl.conf";
+    };
+  };
+
+  # home-manager switch のたびに homectl からユーザー情報を取得して git 用 include ファイルを生成
+  home.activation.gitUserFromHomectl = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    _name=$(${pkgs.systemd}/bin/homectl inspect ${config.home.username} --json=short 2>/dev/null \
+      | ${pkgs.jq}/bin/jq -r '.realName // empty')
+    _email=$(${pkgs.systemd}/bin/homectl inspect ${config.home.username} --json=short 2>/dev/null \
+      | ${pkgs.jq}/bin/jq -r '.emailAddress // empty')
+
+    mkdir -p "${config.home.homeDirectory}/.config/git"
+    printf '[user]\n\tname = %s\n\temail = %s\n' "$_name" "$_email" \
+      > "${config.home.homeDirectory}/.config/git/user-from-homectl.conf"
+  '';
+
+  # ========== カーソルテーマ ==========
+  home.pointerCursor = {
+    package = pkgs.bibata-cursors;
+    name    = "Bibata-Modern-Classic";
+    size    = 24;
+    gtk.enable = true;
+    x11.enable = true;
   };
 
   # ========== デフォルトアプリ ==========
