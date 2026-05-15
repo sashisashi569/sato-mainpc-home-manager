@@ -84,6 +84,15 @@
 
   xdg.configFile."mimeapps.list".force = true;
 
+  # ========== SSH ==========
+  programs.ssh = {
+    enable = true;
+    enableDefaultConfig = false;
+    matchBlocks."*" = {
+      identityFile = "~/.ssh/id_ed25519_sk_rk";
+    };
+  };
+
   # ========== 通知デーモン (mako) ==========
   services.mako = {
     enable = true;
