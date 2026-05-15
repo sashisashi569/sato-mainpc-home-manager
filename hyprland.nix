@@ -5,9 +5,9 @@
     enable = true;
     settings = {
       monitor = [
-        "desc:Dell Inc. DELL G2725D REDACTED,2560x1440@179.959,0x0,1,transform,0,vrr,0"
-        "desc:AOC G2490W1G4 REDACTED,1920x1080@60,-1080x0,1,transform,1,vrr,0"
-        "desc:Dell Inc. DELL S2421NX REDACTED,1920x1080@60,2560x0,1,transform,3,vrr,0"
+        "desc:Dell Inc. DELL G2725D,2560x1440@179.959,0x0,1,transform,0,vrr,0"
+        "desc:AOC G2490W1G4,1920x1080@60,-1080x0,1,transform,1,vrr,0"
+        "desc:Dell Inc. DELL S2421NX,1920x1080@60,2560x0,1,transform,3,vrr,0"
       ];
       exec-once = [
         "fcitx5 -d --replace"
